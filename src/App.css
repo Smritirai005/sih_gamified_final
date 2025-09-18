@@ -1,0 +1,832 @@
+/* App Layout */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 10;
+}
+
+/* Scenic Background with Pixel Image */
+.scenic-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  overflow: hidden;
+}
+
+.pixel-backdrop {
+  width: 100%;
+  height: 100%;
+  background-image: url('/pixel.avif');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+}
+
+/* Header Styles */
+.header {
+  background: rgba(34, 139, 34, 0.8);
+  border-bottom: 4px solid var(--ocean-blue);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 
+    0 4px 0px var(--ocean-blue), 
+    0 0 30px rgba(34, 139, 34, 0.4),
+    0 0 60px rgba(34, 139, 34, 0.2);
+  backdrop-filter: blur(15px);
+}
+
+.header-content {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.logo-section h1 {
+  font-size: 1.2rem;
+  margin: 0;
+  color: #ffffff;
+  font-family: 'Minecraft', 'Press Start 2P', monospace;
+  font-weight: 400;
+  text-shadow: 
+    3px 3px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    0 0 10px rgba(255, 255, 255, 0.5);
+  letter-spacing: 2px;
+  filter: brightness(1.2) contrast(1.1);
+  transform: perspective(100px) rotateX(5deg);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.nav a {
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.auth-btn {
+  background: var(--primary-green) !important;
+  color: white !important;
+  border: none !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 0.9rem !important;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-menu {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.user-info {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: var(--primary-green);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+/* Hero Section */
+.hero {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  min-height: 70vh;
+  background: transparent;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  align-items: center;
+  width: 100%;
+}
+
+.hero-text h1 {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  text-shadow: 
+    4px 4px 0px #000,
+    -2px -2px 0px #000,
+    2px -2px 0px #000,
+    -2px 2px 0px #000,
+    0 0 15px rgba(50, 205, 50, 0.8);
+  color: var(--accent-green);
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400;
+  letter-spacing: 3px;
+}
+
+.hero-description {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #ffffff;
+  margin-bottom: 2rem;
+  text-shadow: 
+    2px 2px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000;
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.primary-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: var(--accent-green) !important;
+  color: #000 !important;
+  border: 3px solid #000 !important;
+  padding: 1rem 2rem !important;
+  font-size: 1.1rem !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-weight: 400 !important;
+  box-shadow: 4px 4px 0px #000 !important;
+  text-shadow: none !important;
+}
+
+.secondary-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: transparent !important;
+  color: #ffffff !important;
+  border: 3px solid #ffffff !important;
+  padding: 1rem 2rem !important;
+  font-size: 1.1rem !important;
+  font-family: 'Press Start 2P', monospace !important;
+  font-weight: 400 !important;
+  box-shadow: 4px 4px 0px #000 !important;
+  text-shadow: 
+    2px 2px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000 !important;
+}
+
+.primary-btn.large {
+  padding: 1.2rem 2.5rem !important;
+  font-size: 1.2rem !important;
+}
+
+/* Hero Visual */
+.hero-visual {
+  position: relative;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Stats Section */
+.stats-section {
+  padding: 3rem 2rem;
+  background: rgba(168, 213, 168, 0.1);
+}
+
+.stats-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 2rem;
+}
+
+.stat-card {
+  text-align: center;
+  padding: 2rem 1rem;
+  background: rgba(45, 90, 39, 0.1) !important;
+  border: 4px solid var(--accent-green) !important;
+  border-radius: 15px !important;
+  box-shadow: 
+    0 0 0 2px #000,
+    4px 4px 0px #000,
+    0 0 20px rgba(50, 205, 50, 0.3) !important;
+  color: #ffffff !important;
+  font-family: 'Orbitron', monospace !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.stat-icon {
+  margin-bottom: 1rem;
+}
+
+.stat-number {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: #ffffff;
+  margin-bottom: 0.5rem;
+  text-shadow: 
+    3px 3px 0px #000,
+    -2px -2px 0px #000,
+    2px -2px 0px #000,
+    -2px 2px 0px #000,
+    0 0 15px rgba(255, 255, 255, 0.8);
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400;
+  letter-spacing: 2px;
+  filter: brightness(1.3) contrast(1.2);
+}
+
+.stat-label {
+  color: #ffffff;
+  font-weight: 500;
+  text-shadow: 
+    2px 2px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    0 0 10px rgba(255, 255, 255, 0.6);
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  filter: brightness(1.2) contrast(1.1);
+}
+
+/* Features Section */
+.features-section {
+  padding: 4rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: transparent;
+  margin-top: 2rem;
+  margin-bottom: 2rem;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  text-shadow: 
+    3px 3px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    0 0 10px rgba(45, 90, 39, 0.8);
+  color: var(--accent-green);
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400;
+  letter-spacing: 2px;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #ffffff;
+  text-shadow: 
+    2px 2px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000;
+  font-family: 'Orbitron', monospace;
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.feature-card {
+  text-align: center;
+  padding: 2.5rem 2rem;
+  transition: transform 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+}
+
+.feature-icon {
+  margin-bottom: 1.5rem;
+}
+
+.feature-card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #ffffff;
+  text-shadow: 
+    3px 3px 0px #000,
+    -2px -2px 0px #000,
+    2px -2px 0px #000,
+    -2px 2px 0px #000,
+    0 0 15px rgba(255, 255, 255, 0.8);
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400;
+  letter-spacing: 2px;
+  filter: brightness(1.3) contrast(1.2);
+}
+
+.feature-card p {
+  color: #ffffff;
+  line-height: 1.6;
+  text-shadow: 
+    2px 2px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    0 0 10px rgba(255, 255, 255, 0.6);
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  filter: brightness(1.2) contrast(1.1);
+}
+
+/* CTA Section */
+.cta-section {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, var(--light-green), var(--accent-green));
+}
+
+.cta-content {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.95) !important;
+}
+
+.cta-content h2 {
+  font-size: 2.2rem;
+  margin: 1rem 0;
+}
+
+.cta-content p {
+  font-size: 1.1rem;
+  color: var(--secondary-green);
+  margin-bottom: 2rem;
+}
+
+/* Footer */
+.footer {
+  background: rgba(45, 90, 39, 0.8);
+  color: white;
+  padding: 2rem;
+  text-align: center;
+  backdrop-filter: blur(15px);
+  border-top: 2px solid rgba(255, 255, 255, 0.1);
+  margin-top: 2rem;
+}
+
+.footer-content {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+.footer-logo .eco-icon {
+  color: var(--accent-green) !important;
+}
+
+/* Navigation Styles */
+.nav-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 2px solid #000;
+  background: var(--accent-green);
+  color: #000;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  font-size: 0.6rem;
+  font-family: 'Press Start 2P', monospace;
+  text-shadow: none;
+  box-shadow: 3px 3px 0px #000;
+  image-rendering: pixelated;
+}
+
+.nav-btn:hover {
+  background: var(--lime-green);
+  transform: translateY(1px);
+  box-shadow: 2px 2px 0px #000;
+}
+
+.nav-btn.active {
+  background: var(--sunset-orange);
+  transform: translateY(2px);
+  box-shadow: 1px 1px 0px #000;
+}
+
+.user-level {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--sunset-orange);
+  font-weight: 600;
+}
+
+/* Main Content */
+.main-content {
+  flex: 1;
+  padding: 2rem 0;
+  background: transparent;
+  margin: 1rem;
+}
+
+/* Progress Section */
+.progress-section {
+  padding: 3rem 2rem;
+  background: transparent;
+  margin: 2rem 0;
+}
+
+.progress-dashboard {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.level-card {
+  margin-bottom: 2rem;
+  padding: 2rem;
+  background: rgba(45, 90, 39, 0.1) !important;
+  border: 4px solid var(--accent-green) !important;
+  border-radius: 15px !important;
+  box-shadow: 
+    0 0 0 2px #000,
+    4px 4px 0px #000,
+    0 0 20px rgba(50, 205, 50, 0.3) !important;
+  color: #ffffff !important;
+  font-family: 'Orbitron', monospace !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.level-info {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.level-info h3 {
+  margin: 0;
+  font-size: 1.5rem;
+  color: #ffffff;
+  text-shadow: 
+    3px 3px 0px #000,
+    -2px -2px 0px #000,
+    2px -2px 0px #000,
+    -2px 2px 0px #000,
+    0 0 15px rgba(255, 255, 255, 0.8);
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400;
+  letter-spacing: 2px;
+  filter: brightness(1.3) contrast(1.2);
+}
+
+.level-info p {
+  margin: 0;
+  color: #ffffff;
+  text-shadow: 
+    2px 2px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    0 0 10px rgba(255, 255, 255, 0.6);
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  filter: brightness(1.2) contrast(1.1);
+}
+
+/* Badges Section */
+.badges-section {
+  padding: 3rem 2rem;
+  background: transparent;
+  margin: 2rem 0;
+}
+
+.badges-grid {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+/* Quiz Section */
+.quiz-section {
+  padding: 3rem 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  background: transparent;
+}
+
+.quiz-start {
+  text-align: center;
+  padding: 3rem 2rem;
+  background: rgba(45, 90, 39, 0.1) !important;
+  border: 4px solid var(--accent-green) !important;
+  border-radius: 15px !important;
+  box-shadow: 
+    0 0 0 2px #000,
+    4px 4px 0px #000,
+    0 0 20px rgba(50, 205, 50, 0.3) !important;
+  color: #ffffff !important;
+  font-family: 'Orbitron', monospace !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.quiz-start h3 {
+  margin: 1rem 0;
+  color: #ffffff;
+  font-size: 1.8rem;
+  text-shadow: 
+    3px 3px 0px #000,
+    -2px -2px 0px #000,
+    2px -2px 0px #000,
+    -2px 2px 0px #000,
+    0 0 15px rgba(255, 255, 255, 0.8);
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400;
+  letter-spacing: 2px;
+  filter: brightness(1.3) contrast(1.2);
+}
+
+.quiz-start p {
+  margin-bottom: 2rem;
+  color: #ffffff;
+  font-size: 1.1rem;
+  text-shadow: 
+    2px 2px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    0 0 10px rgba(255, 255, 255, 0.6);
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  filter: brightness(1.2) contrast(1.1);
+}
+
+.quiz-info {
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: #ffffff;
+  font-weight: 500;
+  text-shadow: 
+    1px 1px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000;
+  font-family: 'Orbitron', monospace;
+  font-weight: 600;
+}
+
+/* Games Section */
+.games-section {
+  padding: 3rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  background: transparent;
+}
+
+.games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 2rem;
+}
+
+.game-card-large {
+  padding: 2rem;
+}
+
+.game-card-large h3 {
+  color: #ffffff;
+  text-shadow: 
+    3px 3px 0px #000,
+    -2px -2px 0px #000,
+    2px -2px 0px #000,
+    -2px 2px 0px #000,
+    0 0 15px rgba(255, 255, 255, 0.8);
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400;
+  letter-spacing: 2px;
+  filter: brightness(1.3) contrast(1.2);
+}
+
+.game-card-large p {
+  color: #ffffff;
+  text-shadow: 
+    2px 2px 0px #000,
+    -1px -1px 0px #000,
+    1px -1px 0px #000,
+    -1px 1px 0px #000,
+    0 0 10px rgba(255, 255, 255, 0.6);
+  font-family: 'Orbitron', monospace;
+  font-weight: 700;
+  filter: brightness(1.2) contrast(1.1);
+}
+
+.game-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.game-icon {
+  flex-shrink: 0;
+}
+
+.game-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: var(--primary-green);
+  font-size: 1.3rem;
+}
+
+.game-info p {
+  margin: 0;
+  color: var(--secondary-green);
+  line-height: 1.5;
+}
+
+.game-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.game-stats {
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+  color: var(--secondary-green);
+}
+
+/* Game Card Base Styles */
+.game-card {
+  background: rgba(45, 90, 39, 0.1) !important;
+  border: 4px solid var(--accent-green) !important;
+  border-radius: 15px !important;
+  box-shadow: 
+    0 0 0 2px #000,
+    4px 4px 0px #000,
+    0 0 20px rgba(50, 205, 50, 0.3) !important;
+  transition: all 0.3s ease !important;
+  color: #ffffff !important;
+  font-family: 'Orbitron', monospace !important;
+  backdrop-filter: blur(5px) !important;
+}
+
+.game-card:hover {
+  background: rgba(50, 205, 50, 0.2) !important;
+  border-color: var(--lime-green) !important;
+  transform: translateY(-4px) scale(1.02) !important;
+  box-shadow: 
+    0 0 0 2px #000,
+    8px 8px 0px #000,
+    0 0 30px rgba(50, 205, 50, 0.6) !important;
+}
+
+/* Feature Button */
+.feature-btn {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: var(--accent-green);
+  color: #000;
+  border: 2px solid #000;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  font-weight: 400;
+  transition: all 0.3s ease;
+  margin-top: 1rem;
+  box-shadow: 3px 3px 0px #000;
+}
+
+.feature-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 4px 4px 0px #000;
+  background: var(--lime-green);
+}
+
+/* Leaderboard Section */
+.leaderboard-section {
+  padding: 2rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+    text-align: center;
+  }
+  
+  .hero-text h1 {
+    font-size: 2.5rem;
+  }
+  
+  .header-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .nav {
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .nav-btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+  
+  .hero-buttons {
+    justify-content: center;
+  }
+  
+  
+  .user-menu {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .quiz-info {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .games-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .game-header {
+    flex-direction: column;
+    text-align: center;
+  }
+  
+  .game-actions {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  .badges-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Animations */
