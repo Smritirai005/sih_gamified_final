@@ -1,10 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 const AnimatedNature = () => {
   const [clouds, setClouds] = useState([]);
   const [birds, setBirds] = useState([]);
   const [butterflies, setButterflies] = useState([]);
   const [waves, setWaves] = useState([]);
+  const facts = useRef([
+    'Recycling one can saves enough energy to run a TV for 3 hours.',
+    'A mature tree absorbs ~48 pounds of CO2 every year.',
+    'Turning off the tap while brushing saves up to 8 gallons/day.',
+    'Coral reefs support about 25% of all marine species.',
+  ]);
+  const [flyingFact, setFlyingFact] = useState(null);
+  const [flightPos, setFlightPos] = useState({ x: -220, y: 12 });
+  const inFlight = useRef(false);
 
   useEffect(() => {
     // Generate animated clouds
@@ -51,6 +60,32 @@ const AnimatedNature = () => {
     setBirds(birdPositions);
     setButterflies(butterflyPositions);
     setWaves(wavePositions);
+  }, []);
+
+  // Schedule periodic bird flight with a fact paper
+  useEffect(() => {
+    const schedule = setInterval(() => {
+      if (inFlight.current) return;
+      const fact = facts.current[Math.floor(Math.random() * facts.current.length)];
+      setFlyingFact(fact);
+      setFlightPos({ x: window.innerWidth + 240, y: 12 + Math.random() * 20 });
+      inFlight.current = true;
+      const animate = (t) => {
+        setFlightPos((p) => {
+          const nx = p.x - 2;
+          const ny = p.y + Math.sin(t / 200) * 0.2;
+          if (nx < -260) {
+            inFlight.current = false;
+            setFlyingFact(null);
+            return p;
+          }
+          requestAnimationFrame(animate);
+          return { x: nx, y: ny };
+        });
+      };
+      requestAnimationFrame(animate);
+    }, 12000);
+    return () => clearInterval(schedule);
   }, []);
 
   const renderCloud = (cloud) => (
@@ -151,6 +186,18 @@ const AnimatedNature = () => {
         <div className="sun-ray ray-3"></div>
         <div className="sun-ray ray-4"></div>
       </div>
+
+      {flyingFact && (
+        <div
+          className="flying-fact"
+          style={{ transform: `translate(${flightPos.x}px, ${flightPos.y}px)` }}
+        >
+          <span className="bird">🐦</span>
+          <div className="paper">
+            <div className="paper-text">{flyingFact}</div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

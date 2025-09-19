@@ -15,16 +15,20 @@
 
 /* Modal Content */
 .modal-content {
-  background: white;
-  border-radius: 20px;
+  background: transparent;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  border-radius: 0;
   padding: 2rem;
   width: 90%;
   max-width: 450px;
   max-height: 90vh;
   overflow-y: auto;
   position: relative;
-  box-shadow: 0 20px 60px rgba(45, 90, 39, 0.2);
-  border: 1px solid rgba(168, 213, 168, 0.3);
+  box-shadow: none;
+  border: 4px solid #2e6c28;
+  outline: 4px solid rgba(0,0,0,0.8);
+  image-rendering: pixelated;
 }
 
 .close-btn {
@@ -52,16 +56,19 @@
 }
 
 .auth-header h2 {
-  color: var(--primary-green);
+  color: #d2f8cc;
   font-size: 1.8rem;
   margin-bottom: 0.5rem;
   font-weight: 700;
+  text-shadow: 2px 2px 0 #1b3a17;
+  font-family: 'Press Start 2P', monospace;
 }
 
 .auth-header p {
-  color: var(--secondary-green);
+  color: #b4d7b0;
   font-size: 0.95rem;
   line-height: 1.5;
+  font-family: 'Orbitron', monospace;
 }
 
 /* Error Message */
@@ -92,30 +99,31 @@
 .input-icon {
   position: absolute;
   left: 1rem;
-  color: var(--secondary-green);
+  color: #a9c9a5;
   z-index: 1;
 }
 
 .input-group input {
   width: 100%;
   padding: 1rem 1rem 1rem 3rem;
-  border: 2px solid rgba(168, 213, 168, 0.3);
-  border-radius: 12px;
+  border: 3px solid #264b21;
+  border-radius: 0;
   font-size: 1rem;
-  background: rgba(248, 255, 248, 0.5);
+  background: rgba(12, 18, 12, 0.6);
   transition: all 0.3s ease;
-  color: var(--primary-green);
+  color: #e4ffe0;
+  font-family: 'Press Start 2P', monospace;
 }
 
 .input-group input:focus {
   outline: none;
-  border-color: var(--light-green);
-  background: white;
-  box-shadow: 0 0 0 3px rgba(127, 176, 105, 0.1);
+  border-color: #3e7e36;
+  background: rgba(18, 26, 18, 0.75);
+  box-shadow: 0 0 0 3px rgba(62, 126, 54, 0.25);
 }
 
 .input-group input::placeholder {
-  color: var(--secondary-green);
+  color: #9dc39a;
   opacity: 0.7;
 }
 
@@ -125,26 +133,27 @@
   background: none;
   border: none;
   cursor: pointer;
-  color: var(--secondary-green);
+  color: #a9c9a5;
   padding: 0.25rem;
   border-radius: 4px;
   transition: all 0.3s ease;
 }
 
 .password-toggle:hover {
-  color: var(--primary-green);
-  background: rgba(168, 213, 168, 0.1);
+  color: #d2f8cc;
+  background: rgba(61, 117, 54, 0.15);
 }
 
 /* Submit Button */
 .auth-submit-btn {
-  background: linear-gradient(135deg, var(--light-green), var(--accent-green)) !important;
-  color: white !important;
-  border: none !important;
+  background: linear-gradient(180deg, #5bb44d, #2e6c28) !important;
+  color: #121812 !important;
+  border: 3px solid #1f3f1b !important;
   padding: 1rem 2rem !important;
-  border-radius: 12px !important;
-  font-size: 1rem !important;
+  border-radius: 0 !important;
+  font-size: 0.8rem !important;
   font-weight: 600 !important;
+  font-family: 'Press Start 2P', monospace !important;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-top: 0.5rem;
@@ -152,7 +161,7 @@
 
 .auth-submit-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(45, 90, 39, 0.3);
+  box-shadow: 0 8px 0 #132910;
 }
 
 .auth-submit-btn:disabled {
@@ -175,13 +184,13 @@
   left: 0;
   right: 0;
   height: 1px;
-  background: rgba(168, 213, 168, 0.3);
+  background: rgba(168, 213, 168, 0.25);
 }
 
 .divider span {
-  background: white;
+  background: transparent;
   padding: 0 1rem;
-  color: var(--secondary-green);
+  color: #b4d7b0;
   font-size: 0.9rem;
 }
 
@@ -193,20 +202,21 @@
   justify-content: center;
   gap: 0.75rem;
   padding: 1rem 2rem;
-  border: 2px solid rgba(168, 213, 168, 0.3);
-  border-radius: 12px;
-  background: white;
-  color: var(--primary-green);
-  font-size: 1rem;
+  border: 3px solid #2a5125;
+  border-radius: 0;
+  background: rgba(18, 26, 18, 0.75);
+  color: #e4ffe0;
+  font-size: 0.8rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: 1.5rem;
+  font-family: 'Press Start 2P', monospace;
 }
 
 .google-btn:hover {
-  border-color: var(--light-green);
-  background: rgba(168, 213, 168, 0.05);
+  border-color: #3e7e36;
+  background: rgba(18, 26, 18, 0.9);
   transform: translateY(-1px);
 }
 
@@ -216,22 +226,23 @@
 }
 
 .auth-switch p {
-  color: var(--secondary-green);
+  color: #b4d7b0;
   font-size: 0.9rem;
 }
 
 .switch-btn {
   background: none;
   border: none;
-  color: var(--primary-green);
+  color: #d2f8cc;
   font-weight: 600;
   cursor: pointer;
   text-decoration: underline;
   transition: color 0.3s ease;
+  font-family: 'Press Start 2P', monospace;
 }
 
 .switch-btn:hover {
-  color: var(--forest-green);
+  color: #a8f39a;
 }
 
 /* Responsive Design */

@@ -382,13 +382,13 @@
 }
 
 .create-group-modal {
-  background: var(--cloud-white);
+  background: rgba(0, 0, 0, 0.35);
   border: 3px solid var(--ocean-blue);
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 
     inset -3px -3px 0px var(--ocean-blue),
-    inset 3px 3px 0px rgba(255, 255, 255, 0.4),
+    inset 3px 3px 0px rgba(0, 0, 0, 0.4),
     6px 6px 0px var(--ocean-blue);
   width: 400px;
   max-width: 90vw;
@@ -398,11 +398,11 @@
 }
 
 .create-group-modal h3 {
-  color: var(--ocean-blue);
+  color: #ffffff;
   font-size: 1.2rem;
   margin-bottom: 1.5rem;
   text-align: center;
-  text-shadow: 2px 2px 0px var(--nature-dark);
+  text-shadow: 2px 2px 0px #000;
 }
 
 .form-group {
@@ -412,18 +412,19 @@
 .form-group label {
   display: block;
   font-size: 0.7rem;
-  color: var(--nature-dark);
+  color: #ffffff;
   margin-bottom: 0.5rem;
   font-weight: bold;
+  text-shadow: 1px 1px 0 #000;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
   padding: 0.75rem;
-  border: 2px solid var(--nature-dark);
-  background: var(--cloud-white);
-  color: var(--nature-dark);
+  border: 2px solid var(--ocean-blue);
+  background: rgba(0,0,0,0.45);
+  color: #ffffff;
   font-size: 0.7rem;
   font-family: inherit;
   image-rendering: pixelated;
@@ -459,8 +460,8 @@
 }
 
 .cancel-btn {
-  background: var(--cloud-white);
-  color: var(--nature-dark);
+  background: rgba(0,0,0,0.6);
+  color: #fff;
 }
 
 .cancel-btn:hover {

@@ -31,27 +31,47 @@ import QuizCard from './components/QuizCard'
 import Leaderboard from './components/Leaderboard'
 import ScenicBackground from './components/ScenicBackground'
 import Community from './components/Community'
+import Dashboard from './components/Dashboard'
 import PixelatedTree from './components/PixelatedTree'
 import './App.css'
 import './components/GameComponents.css'
 import './components/Community.css'
+import { listenToUserProfile, incrementProgressOnCorrect, finalizeQuiz } from './services/firestore'
 
 function App() {
   const [showAuthModal, setShowAuthModal] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const [userProgress, setUserProgress] = useState({
-    level: 5,
-    experience: 750,
+    level: 1,
+    experience: 0,
     maxExperience: 1000,
-    ecoPoints: 1250,
-    treesPlanted: 12,
-    quizzesCompleted: 8,
-    badgesEarned: 3
+    ecoPoints: 0,
+    treesPlanted: 0,
+    quizzesCompleted: 0,
+    badgesEarned: 0
   })
   const [showQuiz, setShowQuiz] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [quizScore, setQuizScore] = useState(0)
+  const [quizLevel, setQuizLevel] = useState(1)
   const { currentUser, logout } = useAuth()
+
+  // Temporarily disabled Firestore listeners to fix loading
+  // useEffect(() => {
+  //   if (!currentUser) return;
+  //   const unsub = listenToUserProfile(currentUser.uid, (profile) => {
+  //     setUserProgress((prev) => ({
+  //       ...prev,
+  //       level: profile.level || 1,
+  //       experience: profile.experience || 0,
+  //       maxExperience: profile.maxExperience || 1000,
+  //       ecoPoints: profile.ecoPoints || 0,
+  //       treesPlanted: profile.treesPlanted || 0,
+  //       quizzesCompleted: profile.quizzesCompleted || 0,
+  //     }))
+  //   })
+  //   return () => unsub && unsub()
+  // }, [currentUser])
 
   // Sample quiz questions
   const quizQuestions = [
@@ -108,11 +128,15 @@ function App() {
   const handleQuizAnswer = (isCorrect, answer) => {
     if (isCorrect) {
       setQuizScore(prev => prev + 10)
-      setUserProgress(prev => ({
-        ...prev,
-        ecoPoints: prev.ecoPoints + 10,
-        experience: prev.experience + 10
-      }))
+      if (currentUser) {
+        incrementProgressOnCorrect(currentUser.uid)
+      } else {
+        setUserProgress(prev => ({
+          ...prev,
+          ecoPoints: prev.ecoPoints + 10,
+          experience: prev.experience + 10
+        }))
+      }
     }
     
     setTimeout(() => {
@@ -121,10 +145,14 @@ function App() {
       } else {
         setShowQuiz(false)
         setCurrentQuestion(0)
-        setUserProgress(prev => ({
-          ...prev,
-          quizzesCompleted: prev.quizzesCompleted + 1
-        }))
+        if (currentUser) {
+          finalizeQuiz(currentUser.uid, { scoreIncrement: quizScore })
+        } else {
+          setUserProgress(prev => ({
+            ...prev,
+            quizzesCompleted: prev.quizzesCompleted + 1
+          }))
+        }
       }
     }, 2000)
   }
@@ -133,6 +161,8 @@ function App() {
     setShowQuiz(true)
     setCurrentQuestion(0)
     setQuizScore(0)
+    // Level scales with quizzesCompleted for now
+    setQuizLevel(Math.min(3, Math.floor((userProgress.quizzesCompleted || 0) / 3) + 1))
   }
 
   return (
@@ -177,6 +207,13 @@ function App() {
               Leaderboard
             </button>
             <button 
+              className={`nav-btn ${activeSection === 'dashboard' ? 'active' : ''}`}
+              onClick={() => setActiveSection('dashboard')}
+            >
+              <User size={18} />
+              Dashboard
+            </button>
+            <button 
               className={`nav-btn ${activeSection === 'community' ? 'active' : ''}`}
               onClick={() => setActiveSection('community')}
             >
@@ -186,11 +223,11 @@ function App() {
             {currentUser ? (
               <div className="user-menu">
                 <div className="user-info">
-                  <User size={20} />
-                  <span>{currentUser.email}</span>
+                  <div className="user-avatar alt" title={currentUser.email}>
+                    {currentUser.email?.[0]?.toUpperCase() || 'U'}
+                  </div>
                   <div className="user-level">
                     <Crown size={16} />
-                    Level {userProgress.level}
                   </div>
                 </div>
                 <button className="auth-btn" onClick={logout}>
@@ -341,6 +378,7 @@ function App() {
                 onAnswer={handleQuizAnswer}
                 questionNumber={currentQuestion + 1}
                 totalQuestions={quizQuestions.length}
+                level={quizLevel}
               />
             ) : (
               <div className="quiz-start game-card">
@@ -374,6 +412,10 @@ function App() {
           <section className="leaderboard-section">
             <Leaderboard currentUser={currentUser} />
           </section>
+        )}
+
+        {activeSection === 'dashboard' && (
+          <Dashboard />
         )}
 
         {activeSection === 'community' && (

@@ -6,18 +6,28 @@ export default function QuizCard({
   options, 
   correctAnswer, 
   onAnswer, 
-  timeLimit = 30,
+  timeLimit = 20,
   questionNumber,
-  totalQuestions 
+  totalQuestions,
+  level = 1
 }) {
   const [selectedAnswer, setSelectedAnswer] = useState(null);
   const [timeLeft, setTimeLeft] = useState(timeLimit);
   const [showResult, setShowResult] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
 
+  // Reset state when question changes
+  useEffect(() => {
+    setSelectedAnswer(null);
+    setShowResult(false);
+    setIsCorrect(false);
+    setTimeLeft(timeLimit);
+  }, [question, options, correctAnswer, timeLimit]);
+
   useEffect(() => {
     if (timeLeft > 0 && !showResult) {
-      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), 1000);
+      const intervalMs = level >= 3 ? 600 : level === 2 ? 800 : 1000;
+      const timer = setTimeout(() => setTimeLeft(timeLeft - 1), intervalMs);
       return () => clearTimeout(timer);
     } else if (timeLeft === 0 && !showResult) {
       handleAnswer(null);
@@ -34,7 +44,7 @@ export default function QuizCard({
     
     setTimeout(() => {
       onAnswer(correct, answer);
-    }, 1500);
+    }, 800);
   };
 
   const getOptionClass = (option) => {
@@ -56,6 +66,7 @@ export default function QuizCard({
         <div className="quiz-progress">
           <span className="quiz-number">Question {questionNumber}</span>
           <span className="quiz-total">of {totalQuestions}</span>
+          <span className="quiz-total" style={{ marginLeft: 12 }}>| Level {level}</span>
         </div>
         <div className="quiz-timer" style={{ color: getTimeColor() }}>
           <Clock size={20} />

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { 
   Users, 
   Plus, 
@@ -12,49 +12,69 @@ import {
   Headphones,
   VolumeX
 } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { listenToGroups, createGroup, listenToMessages, sendMessage, deleteGroup } from '../services/firestore';
 
 const Community = () => {
-  const [activeChannel, setActiveChannel] = useState('general');
+  const [activeChannel, setActiveChannel] = useState(null);
   const [showCreateGroup, setShowCreateGroup] = useState(false);
   const [newGroupName, setNewGroupName] = useState('');
   const [newGroupDescription, setNewGroupDescription] = useState('');
-  const [messages, setMessages] = useState([
-    { id: 1, user: 'EcoWarrior123', message: 'Just completed the recycling challenge! 🌱', time: '2:30 PM', avatar: '🦋' },
-    { id: 2, user: 'GreenThumb', message: 'Anyone want to join our tree planting event this weekend?', time: '2:32 PM', avatar: '🌳' },
-    { id: 3, user: 'OceanGuardian', message: 'The ocean cleanup was amazing! We collected 50kg of plastic', time: '2:35 PM', avatar: '🐠' },
-    { id: 4, user: 'ClimateHero', message: 'Check out this new documentary about renewable energy', time: '2:40 PM', avatar: '⚡' }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [groups, setGroups] = useState([]);
+  const { currentUser } = useAuth();
 
-  const groups = [
-    { id: 'general', name: 'General', icon: '🌍', members: 1247, online: 89 },
-    { id: 'recycling', name: 'Recycling Heroes', icon: '♻️', members: 456, online: 23 },
-    { id: 'gardening', name: 'Garden Masters', icon: '🌱', members: 789, online: 45 },
-    { id: 'ocean', name: 'Ocean Guardians', icon: '🌊', members: 234, online: 12 },
-    { id: 'energy', name: 'Clean Energy', icon: '⚡', members: 345, online: 18 },
-    { id: 'wildlife', name: 'Wildlife Protection', icon: '🦋', members: 567, online: 34 }
-  ];
+  // Temporarily disabled Firestore listeners to fix loading
+  // useEffect(() => {
+  //   const unsub = listenToGroups((g) => {
+  //     setGroups(g);
+  //     if (!activeChannel && g.length > 0) setActiveChannel(g[0].id);
+  //   });
+  //   return () => unsub && unsub();
+  // }, []);
 
-  const handleCreateGroup = () => {
-    if (newGroupName.trim()) {
-      // In a real app, this would create a new group
-      console.log('Creating group:', newGroupName, newGroupDescription);
+  // Temporarily disabled Firestore listeners to fix loading
+  // useEffect(() => {
+  //   if (!activeChannel) return;
+  //   const unsub = listenToMessages(activeChannel, (msgs) => {
+  //     setMessages(msgs);
+  //   });
+  //   return () => unsub && unsub();
+  // }, [activeChannel]);
+
+  const handleCreateGroup = async () => {
+    if (!currentUser) {
+      alert('Please login to create a group');
+      return;
+    }
+    const name = newGroupName.trim();
+    if (!name) {
+      alert('Please enter a group name');
+      return;
+    }
+    try {
+      const id = await createGroup({ name, description: newGroupDescription.trim(), ownerUid: currentUser.uid });
       setShowCreateGroup(false);
       setNewGroupName('');
       setNewGroupDescription('');
+      setActiveChannel(id);
+    } catch (e) {
+      console.error('Failed to create group', e);
+      alert('Failed to create group. Please try again.');
     }
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
+    if (!currentUser || !activeChannel) return;
     if (newMessage.trim()) {
-      const message = {
-        id: messages.length + 1,
-        user: 'You',
-        message: newMessage,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        avatar: '🌱'
-      };
-      setMessages([...messages, message]);
+      await sendMessage({
+        groupId: activeChannel,
+        uid: currentUser.uid,
+        user: currentUser.email,
+        avatar: '🌱',
+        text: newMessage.trim(),
+      });
       setNewMessage('');
     }
   };
@@ -105,7 +125,7 @@ const Community = () => {
           <div className="chat-header">
             <div className="channel-info">
               <Hash size={20} />
-              <span>{groups.find(g => g.id === activeChannel)?.name}</span>
+              <span>{groups.find(g => g.id === activeChannel)?.name || '...'}</span>
             </div>
             <div className="chat-controls">
               <button className="control-btn">
@@ -114,6 +134,35 @@ const Community = () => {
               <button className="control-btn">
                 <Headphones size={16} />
               </button>
+              {activeChannel && (
+                <>
+                  <button
+                    className="control-btn"
+                    title="Invite friends"
+                    onClick={() => {
+                      const invite = `${window.location.origin}?group=${activeChannel}`;
+                      navigator.clipboard.writeText(invite);
+                      alert('Invite link copied to clipboard!');
+                    }}
+                  >
+                    Invite
+                  </button>
+                  {currentUser && groups.find(g => g.id === activeChannel)?.ownerUid === currentUser.uid && (
+                    <button
+                      className="control-btn"
+                      title="Delete group"
+                      onClick={async () => {
+                        if (confirm('Delete this group? This cannot be undone.')) {
+                          await deleteGroup(activeChannel);
+                          setActiveChannel(null);
+                        }
+                      }}
+                    >
+                      Delete
+                    </button>
+                  )}
+                </>
+              )}
               <button className="control-btn">
                 <Settings size={16} />
               </button>
@@ -127,7 +176,8 @@ const Community = () => {
                 <div className="message-content">
                   <div className="message-header">
                     <span className="message-user">{message.user}</span>
-                    <span className="message-time">{message.time}</span>
+                    {/* createdAt is serverTimestamp; show HH:MM if available */}
+                    <span className="message-time">{message.createdAt?.toDate ? message.createdAt.toDate().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : ''}</span>
                   </div>
                   <div className="message-text">{message.message}</div>
                 </div>
@@ -138,7 +188,7 @@ const Community = () => {
           <div className="message-input">
             <input
               type="text"
-              placeholder={`Message #${groups.find(g => g.id === activeChannel)?.name}`}
+              placeholder={`Message #${groups.find(g => g.id === activeChannel)?.name || ''}`}
               value={newMessage}
               onChange={(e) => setNewMessage(e.target.value)}
               onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
