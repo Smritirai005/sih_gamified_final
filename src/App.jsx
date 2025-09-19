@@ -83,7 +83,7 @@ function App() {
   ]
 
   const ecoFeatures = [
-    { icon: <TreePine size={40} />, title: "Tree Planting Game", description: "Plant virtual trees and watch your forest grow! Each tree helps reduce CO2." },
+    { icon: <TreePine size={40} />, title: "Pollutants Buster", description: "Plant virtual trees and watch your forest grow! Each tree helps reduce CO2." },
     { icon: <Recycle size={40} />, title: "Recycling Challenge", description: "Sort waste correctly and earn points! Learn what goes where." },
     { icon: <Droplets size={40} />, title: "Water Conservation", description: "Complete daily challenges to save water and protect our oceans." },
     { icon: <Wind size={40} />, title: "Clean Energy Quest", description: "Explore renewable energy sources and build your eco-power plant." }
