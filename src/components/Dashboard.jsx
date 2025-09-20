@@ -1,20 +1,20 @@
 import { useEffect, useState } from 'react';
-import { Crown, TreePine, Droplets, Wind, Brain, User } from 'lucide-react';
+import { Crown, TreePine, Droplets, Wind, Brain, User, Play, ExternalLink, Target, BookOpen, Award, Sun, Recycle } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { listenToUserProfile } from '../services/firestore';
 import ProgressBar from './ProgressBar';
 import Badge from './Badge';
+import './Dashboard.css';
 
 export default function Dashboard() {
   const { currentUser } = useAuth();
   const [profile, setProfile] = useState(null);
 
-  // Temporarily disabled Firestore listeners to fix loading
-  // useEffect(() => {
-  //   if (!currentUser) return;
-  //   const unsub = listenToUserProfile(currentUser.uid, setProfile);
-  //   return () => unsub && unsub();
-  // }, [currentUser]);
+  useEffect(() => {
+    if (!currentUser) return;
+    const unsub = listenToUserProfile(currentUser.uid, setProfile);
+    return () => unsub && unsub();
+  }, [currentUser]);
 
   if (!currentUser) {
     return (
@@ -45,6 +45,53 @@ export default function Dashboard() {
     description: 'Achievement earned',
     earned: true,
   }));
+
+  // Mock quiz results for demonstration
+  const quizResults = [
+    { topic: 'Climate Change', score: 85, date: '2024-01-15', questions: 10, correct: 8 },
+    { topic: 'Renewable Energy', score: 92, date: '2024-01-12', questions: 8, correct: 7 },
+    { topic: 'Ocean Conservation', score: 78, date: '2024-01-10', questions: 12, correct: 9 },
+    { topic: 'Biodiversity', score: 88, date: '2024-01-08', questions: 9, correct: 8 },
+  ];
+
+  const environmentalRoadmap = [
+    { 
+      id: 1, 
+      title: 'Climate Science Basics', 
+      description: 'Understanding greenhouse gases, global warming, and climate patterns',
+      status: 'completed',
+      icon: <Brain size={20} />
+    },
+    { 
+      id: 2, 
+      title: 'Renewable Energy Systems', 
+      description: 'Solar, wind, hydro, and geothermal energy technologies',
+      status: 'completed',
+      icon: <Sun size={20} />
+    },
+    { 
+      id: 3, 
+      title: 'Ocean Conservation', 
+      description: 'Marine ecosystems, plastic pollution, and sustainable fishing',
+      status: 'in-progress',
+      icon: <Droplets size={20} />
+    },
+    { 
+      id: 4, 
+      title: 'Biodiversity Protection', 
+      description: 'Species conservation, habitat restoration, and ecosystem balance',
+      status: 'pending',
+      icon: <TreePine size={20} />
+    },
+    { 
+      id: 5, 
+      title: 'Sustainable Living', 
+      description: 'Zero waste, circular economy, and green lifestyle choices',
+      status: 'pending',
+      icon: <Recycle size={20} />
+    },
+  ];
+
 
   return (
     <section className="progress-section">
@@ -115,6 +162,69 @@ export default function Dashboard() {
           </div>
         </div>
       )}
+
+      {/* Quiz Results Section */}
+      <div className="quiz-results-section">
+        <div className="section-header">
+          <h2>Quiz Results</h2>
+          <p>Your recent quiz performance</p>
+        </div>
+        <div className="quiz-results-grid">
+          {quizResults.map((result, index) => (
+            <div key={index} className="quiz-result-card game-card">
+              <div className="quiz-header">
+                <Brain size={20} className="eco-icon" />
+                <div>
+                  <h4>{result.topic}</h4>
+                  <p>{result.date}</p>
+                </div>
+                <div className="quiz-score">
+                  <span className="score-number">{result.score}%</span>
+                </div>
+              </div>
+              <div className="quiz-details">
+                <div className="quiz-stats">
+                  <span>{result.correct}/{result.questions} correct</span>
+                  <ProgressBar 
+                    current={result.score} 
+                    max={100} 
+                    label="" 
+                    color={result.score >= 80 ? '#4CAF50' : result.score >= 60 ? '#FF9800' : '#F44336'}
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Environmental Learning Roadmap */}
+      <div className="roadmap-section">
+        <div className="section-header">
+          <h2>Environmental Learning Roadmap</h2>
+          <p>Your journey to becoming an eco-expert</p>
+        </div>
+        <div className="roadmap-container">
+          {environmentalRoadmap.map((item, index) => (
+            <div key={item.id} className={`roadmap-item ${item.status}`}>
+              <div className="roadmap-icon">
+                {item.status === 'completed' ? <Award size={20} /> : item.icon}
+              </div>
+              <div className="roadmap-content">
+                <h4>{item.title}</h4>
+                <p>{item.description}</p>
+                <div className="roadmap-status">
+                  <span className={`status-badge ${item.status}`}>
+                    {item.status === 'completed' ? '✓ Completed' : 
+                     item.status === 'in-progress' ? '🔄 In Progress' : '⏳ Pending'}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+
     </section>
   );
 }

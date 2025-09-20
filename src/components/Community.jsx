@@ -25,23 +25,21 @@ const Community = () => {
   const [groups, setGroups] = useState([]);
   const { currentUser } = useAuth();
 
-  // Temporarily disabled Firestore listeners to fix loading
-  // useEffect(() => {
-  //   const unsub = listenToGroups((g) => {
-  //     setGroups(g);
-  //     if (!activeChannel && g.length > 0) setActiveChannel(g[0].id);
-  //   });
-  //   return () => unsub && unsub();
-  // }, []);
+  useEffect(() => {
+    const unsub = listenToGroups((g) => {
+      setGroups(g);
+      if (!activeChannel && g.length > 0) setActiveChannel(g[0].id);
+    });
+    return () => unsub && unsub();
+  }, []);
 
-  // Temporarily disabled Firestore listeners to fix loading
-  // useEffect(() => {
-  //   if (!activeChannel) return;
-  //   const unsub = listenToMessages(activeChannel, (msgs) => {
-  //     setMessages(msgs);
-  //   });
-  //   return () => unsub && unsub();
-  // }, [activeChannel]);
+  useEffect(() => {
+    if (!activeChannel) return;
+    const unsub = listenToMessages(activeChannel, (msgs) => {
+      setMessages(msgs);
+    });
+    return () => unsub && unsub();
+  }, [activeChannel]);
 
   const handleCreateGroup = async () => {
     if (!currentUser) {

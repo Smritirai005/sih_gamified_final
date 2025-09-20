@@ -1,0 +1,51 @@
+.offline-indicator {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1000;
+  padding: 0.75rem 1rem;
+  border-radius: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  color: #fff;
+  text-shadow: 1px 1px 0 #000;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+.offline-indicator.offline {
+  background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+  border: 2px solid #d32f2f;
+}
+
+.offline-indicator.online {
+  background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+  border: 2px solid #388E3C;
+}
+
+.indicator-content {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .offline-indicator {
+    top: 10px;
+    right: 10px;
+    padding: 0.5rem 0.75rem;
+    font-size: 0.5rem;
+  }
+}

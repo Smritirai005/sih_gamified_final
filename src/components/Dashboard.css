@@ -1,0 +1,403 @@
+/* Quiz Results Section */
+.quiz-results-section {
+  margin-top: 2rem;
+}
+
+.quiz-results-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.quiz-result-card {
+  padding: 1rem;
+  border: 2px solid #4CAF50;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+  transition: all 0.3s ease;
+}
+
+.quiz-result-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 16px rgba(76, 175, 80, 0.3);
+}
+
+.quiz-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 0.75rem;
+}
+
+.quiz-header h4 {
+  margin: 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.8rem;
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.quiz-header p {
+  margin: 0;
+  font-size: 0.7rem;
+  color: #b4d7b0;
+}
+
+.quiz-score {
+  margin-left: auto;
+}
+
+.score-number {
+  font-family: 'Press Start 2P', monospace;
+  font-size: 1.2rem;
+  color: #4CAF50;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.quiz-details {
+  margin-top: 0.5rem;
+}
+
+.quiz-stats {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  color: #b4d7b0;
+}
+
+/* Environmental Learning Roadmap */
+.roadmap-section {
+  margin-top: 2rem;
+}
+
+.roadmap-container {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.roadmap-container::before {
+  content: '';
+  position: absolute;
+  left: 20px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: linear-gradient(180deg, #4CAF50 0%, #FF9800 50%, #9E9E9E 100%);
+  border-radius: 2px;
+  z-index: 1;
+}
+
+.roadmap-item {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 1.5rem;
+  border: 3px solid #4CAF50;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.08) 100%);
+  border-radius: 16px;
+  transition: all 0.4s ease;
+  position: relative;
+  z-index: 2;
+  margin-left: 1rem;
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.roadmap-item.completed {
+  border-color: #4CAF50;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.25) 0%, rgba(76, 175, 80, 0.15) 100%);
+  box-shadow: 
+    0 12px 24px rgba(76, 175, 80, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.2),
+    0 0 20px rgba(76, 175, 80, 0.2);
+  animation: completedGlow 2s ease-in-out infinite alternate;
+}
+
+.roadmap-item.in-progress {
+  border-color: #FF9800;
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.25) 0%, rgba(255, 152, 0, 0.15) 100%);
+  box-shadow: 
+    0 12px 24px rgba(255, 152, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.2),
+    0 0 20px rgba(255, 152, 0, 0.2);
+  animation: progressPulse 1.5s ease-in-out infinite;
+}
+
+.roadmap-item.pending {
+  border-color: #9E9E9E;
+  background: linear-gradient(135deg, rgba(158, 158, 158, 0.15) 0%, rgba(158, 158, 158, 0.08) 100%);
+  box-shadow: 
+    0 8px 16px rgba(0, 0, 0, 0.2),
+    inset 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+.roadmap-item:hover {
+  transform: translateY(-4px) scale(1.02);
+  box-shadow: 
+    0 16px 32px rgba(0, 0, 0, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.roadmap-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.15);
+  color: #4CAF50;
+  border: 3px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.3s ease;
+  position: relative;
+  z-index: 3;
+}
+
+.roadmap-item.completed .roadmap-icon {
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.4) 0%, rgba(76, 175, 80, 0.2) 100%);
+  color: #4CAF50;
+  border-color: #4CAF50;
+  box-shadow: 
+    0 0 20px rgba(76, 175, 80, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+.roadmap-item.in-progress .roadmap-icon {
+  background: linear-gradient(135deg, rgba(255, 152, 0, 0.4) 0%, rgba(255, 152, 0, 0.2) 100%);
+  color: #FF9800;
+  border-color: #FF9800;
+  box-shadow: 
+    0 0 20px rgba(255, 152, 0, 0.4),
+    inset 0 2px 4px rgba(255, 255, 255, 0.3);
+}
+
+.roadmap-item.pending .roadmap-icon {
+  background: linear-gradient(135deg, rgba(158, 158, 158, 0.4) 0%, rgba(158, 158, 158, 0.2) 100%);
+  color: #9E9E9E;
+  border-color: #9E9E9E;
+  box-shadow: 
+    0 0 10px rgba(158, 158, 158, 0.3),
+    inset 0 2px 4px rgba(255, 255, 255, 0.2);
+}
+
+.roadmap-content {
+  flex: 1;
+}
+
+.roadmap-content h4 {
+  margin: 0 0 0.75rem 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.9rem;
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
+  line-height: 1.3;
+}
+
+.roadmap-content p {
+  margin: 0 0 1rem 0;
+  font-size: 0.75rem;
+  color: #b4d7b0;
+  line-height: 1.5;
+  text-shadow: 1px 1px 0 rgba(0, 0, 0, 0.5);
+}
+
+.roadmap-status {
+  margin-top: 0.75rem;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.6rem;
+  font-family: 'Press Start 2P', monospace;
+  text-shadow: 1px 1px 0 #000;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.status-badge.completed {
+  background: linear-gradient(135deg, #4CAF50 0%, #388E3C 100%);
+  color: #fff;
+  border-color: #4CAF50;
+  box-shadow: 
+    0 4px 8px rgba(76, 175, 80, 0.3),
+    0 0 15px rgba(76, 175, 80, 0.2);
+}
+
+.status-badge.in-progress {
+  background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+  color: #fff;
+  border-color: #FF9800;
+  box-shadow: 
+    0 4px 8px rgba(255, 152, 0, 0.3),
+    0 0 15px rgba(255, 152, 0, 0.2);
+}
+
+.status-badge.pending {
+  background: linear-gradient(135deg, #9E9E9E 0%, #757575 100%);
+  color: #fff;
+  border-color: #9E9E9E;
+  box-shadow: 
+    0 4px 8px rgba(158, 158, 158, 0.3),
+    0 0 10px rgba(158, 158, 158, 0.2);
+}
+
+/* External Games Section */
+.external-games-section {
+  margin-top: 2rem;
+}
+
+.external-games-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.external-game-card {
+  padding: 1.5rem;
+  border: 2px solid #4CAF50;
+  background: linear-gradient(135deg, rgba(76, 175, 80, 0.1) 0%, rgba(76, 175, 80, 0.05) 100%);
+  transition: all 0.3s ease;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+  pointer-events: auto;
+}
+
+.external-game-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+}
+
+.game-icon {
+  margin-bottom: 1rem;
+  font-size: 2rem;
+}
+
+.game-info h4 {
+  margin: 0 0 0.75rem 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.9rem;
+  color: #fff;
+  text-shadow: 2px 2px 0 #000;
+}
+
+.game-info p {
+  margin: 0 0 1rem 0;
+  font-size: 0.7rem;
+  color: #b4d7b0;
+  line-height: 1.4;
+}
+
+.play-external-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-family: 'Press Start 2P', monospace;
+  font-size: 0.6rem;
+  color: #fff;
+  text-decoration: none;
+  text-shadow: 1px 1px 0 #000;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  cursor: pointer;
+  position: relative;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.play-external-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  color: #fff;
+  text-decoration: none;
+}
+
+.play-external-btn:active {
+  transform: translateY(0);
+}
+
+/* Animations */
+@keyframes completedGlow {
+  0% {
+    box-shadow: 
+      0 12px 24px rgba(76, 175, 80, 0.3),
+      inset 0 2px 4px rgba(255, 255, 255, 0.2),
+      0 0 20px rgba(76, 175, 80, 0.2);
+  }
+  100% {
+    box-shadow: 
+      0 12px 24px rgba(76, 175, 80, 0.4),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3),
+      0 0 30px rgba(76, 175, 80, 0.4);
+  }
+}
+
+@keyframes progressPulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 
+      0 12px 24px rgba(255, 152, 0, 0.3),
+      inset 0 2px 4px rgba(255, 255, 255, 0.2),
+      0 0 20px rgba(255, 152, 0, 0.2);
+  }
+  50% {
+    transform: scale(1.02);
+    box-shadow: 
+      0 12px 24px rgba(255, 152, 0, 0.4),
+      inset 0 2px 4px rgba(255, 255, 255, 0.3),
+      0 0 25px rgba(255, 152, 0, 0.3);
+  }
+  100% {
+    transform: scale(1);
+    box-shadow: 
+      0 12px 24px rgba(255, 152, 0, 0.3),
+      inset 0 2px 4px rgba(255, 255, 255, 0.2),
+      0 0 20px rgba(255, 152, 0, 0.2);
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .quiz-results-grid,
+  .external-games-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .roadmap-item {
+    flex-direction: column;
+    text-align: center;
+    margin-left: 0.5rem;
+  }
+  
+  .roadmap-icon {
+    margin-bottom: 0.5rem;
+  }
+  
+  .roadmap-container::before {
+    left: 10px;
+  }
+  
+  .quiz-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  
+  .quiz-score {
+    margin-left: 0;
+  }
+}

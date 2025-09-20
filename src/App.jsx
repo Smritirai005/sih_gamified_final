@@ -33,6 +33,8 @@ import ScenicBackground from './components/ScenicBackground'
 import Community from './components/Community'
 import Dashboard from './components/Dashboard'
 import PixelatedTree from './components/PixelatedTree'
+import OfflineIndicator from './components/OfflineIndicator'
+import QuizCompletion from './components/QuizCompletion'
 import './App.css'
 import './components/GameComponents.css'
 import './components/Community.css'
@@ -51,27 +53,27 @@ function App() {
     badgesEarned: 0
   })
   const [showQuiz, setShowQuiz] = useState(false)
+  const [showQuizCompletion, setShowQuizCompletion] = useState(false)
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [quizScore, setQuizScore] = useState(0)
   const [quizLevel, setQuizLevel] = useState(1)
   const { currentUser, logout } = useAuth()
 
-  // Temporarily disabled Firestore listeners to fix loading
-  // useEffect(() => {
-  //   if (!currentUser) return;
-  //   const unsub = listenToUserProfile(currentUser.uid, (profile) => {
-  //     setUserProgress((prev) => ({
-  //       ...prev,
-  //       level: profile.level || 1,
-  //       experience: profile.experience || 0,
-  //       maxExperience: profile.maxExperience || 1000,
-  //       ecoPoints: profile.ecoPoints || 0,
-  //       treesPlanted: profile.treesPlanted || 0,
-  //       quizzesCompleted: profile.quizzesCompleted || 0,
-  //     }))
-  //   })
-  //   return () => unsub && unsub()
-  // }, [currentUser])
+  useEffect(() => {
+    if (!currentUser) return;
+    const unsub = listenToUserProfile(currentUser.uid, (profile) => {
+      setUserProgress((prev) => ({
+        ...prev,
+        level: profile.level || 1,
+        experience: profile.experience || 0,
+        maxExperience: profile.maxExperience || 1000,
+        ecoPoints: profile.ecoPoints || 0,
+        treesPlanted: profile.treesPlanted || 0,
+        quizzesCompleted: profile.quizzesCompleted || 0,
+      }))
+    })
+    return () => unsub && unsub()
+  }, [currentUser])
 
   // Sample quiz questions
   const quizQuestions = [
@@ -103,10 +105,36 @@ function App() {
   ]
 
   const ecoFeatures = [
-    { icon: <TreePine size={40} />, title: "Pollutants Buster", description: "Plant virtual trees and watch your forest grow! Each tree helps reduce CO2." },
-    { icon: <Recycle size={40} />, title: "Recycling Challenge", description: "Sort waste correctly and earn points! Learn what goes where." },
-    { icon: <Droplets size={40} />, title: "Water Conservation", description: "Complete daily challenges to save water and protect our oceans." },
-    { icon: <Wind size={40} />, title: "Clean Energy Quest", description: "Explore renewable energy sources and build your eco-power plant." }
+    { 
+      icon: <Target size={40} />, 
+      title: "Pollutants Buster", 
+      description: "Environmental Cleanup - Fight pollution and restore ecosystems",
+      link: "https://yrzx7z.csb.app/"
+    },
+    { 
+      icon: <Recycle size={40} />, 
+      title: "Eco Crush", 
+      description: "Recycling Challenge - Master the art of waste sorting and recycling",
+      link: "https://eco-crush.vercel.app/"
+    },
+    { 
+      icon: <Droplets size={40} />, 
+      title: "Eco Learn", 
+      description: "Water Conservation Game - Learn about water saving techniques",
+      link: "https://eco-word-whiz.vercel.app/"
+    },
+    { 
+      icon: <Wind size={40} />, 
+      title: "EcoPuzzle", 
+      description: "Clean Energy Puzzle - Solve puzzles while learning about renewable energy",
+      link: "https://ecopuzzle-o2uw.vercel.app/"
+    },
+    { 
+      icon: <Mountain size={40} />, 
+      title: "Eco Escape", 
+      description: "Adventure Quest - Escape environmental challenges in this thrilling adventure",
+      link: "https://eco-escape-quest.vercel.app/"
+    }
   ]
 
   const gameStats = [
@@ -143,8 +171,11 @@ function App() {
       if (currentQuestion < quizQuestions.length - 1) {
         setCurrentQuestion(prev => prev + 1)
       } else {
+        // Quiz completed - show completion screen
         setShowQuiz(false)
-        setCurrentQuestion(0)
+        setShowQuizCompletion(true)
+        
+        // Update user progress
         if (currentUser) {
           finalizeQuiz(currentUser.uid, { scoreIncrement: quizScore })
         } else {
@@ -159,16 +190,28 @@ function App() {
 
   const startQuiz = () => {
     setShowQuiz(true)
+    setShowQuizCompletion(false)
     setCurrentQuestion(0)
     setQuizScore(0)
     // Level scales with quizzesCompleted for now
     setQuizLevel(Math.min(3, Math.floor((userProgress.quizzesCompleted || 0) / 3) + 1))
   }
 
+  const handleQuizRestart = () => {
+    setShowQuizCompletion(false)
+    startQuiz()
+  }
+
+  const handleQuizNextLevel = () => {
+    setShowQuizCompletion(false)
+    setActiveSection('home')
+  }
+
   return (
     <div className="app">
       {/* Scenic Background */}
       <ScenicBackground />
+      <OfflineIndicator />
       
       {/* Header */}
       <header className="header">
@@ -331,7 +374,27 @@ function App() {
                     </div>
                     <h3>{feature.title}</h3>
                     <p>{feature.description}</p>
-                    <button className="feature-btn">
+                    <button 
+                      className="feature-btn"
+                      onClick={() => {
+                        if (feature.link) {
+                          try {
+                            // For CodeSandbox links, try to handle the manifest issue
+                            if (feature.link.includes('csb.app')) {
+                              // Open in same tab to avoid manifest issues
+                              window.location.href = feature.link;
+                            } else {
+                              window.open(feature.link, '_blank');
+                            }
+                          } catch (error) {
+                            console.error('Error opening game:', error);
+                            alert('Unable to open game. Please try again.');
+                          }
+                        } else {
+                          alert('Game coming soon!');
+                        }
+                      }}
+                    >
                       <Play size={16} />
                       Play Now
                     </button>
@@ -370,7 +433,16 @@ function App() {
               <h2>Environmental Knowledge Quiz</h2>
               <p>Test your eco-knowledge and earn points!</p>
             </div>
-            {showQuiz ? (
+            {showQuizCompletion ? (
+              <QuizCompletion
+                score={quizScore / 10}
+                totalQuestions={quizQuestions.length}
+                level={quizLevel}
+                onRestart={handleQuizRestart}
+                onNextLevel={handleQuizNextLevel}
+                userProgress={userProgress}
+              />
+            ) : showQuiz ? (
               <QuizCard
                 question={quizQuestions[currentQuestion].question}
                 options={quizQuestions[currentQuestion].options}
@@ -441,10 +513,30 @@ function App() {
                     </div>
       </div>
                   <div className="game-actions">
-                    <button className="primary-btn">
+                    <button 
+                      className="primary-btn"
+                      onClick={() => {
+                        if (game.link) {
+                          try {
+                            // For CodeSandbox links, try to handle the manifest issue
+                            if (game.link.includes('csb.app')) {
+                              // Open in same tab to avoid manifest issues
+                              window.location.href = game.link;
+                            } else {
+                              window.open(game.link, '_blank');
+                            }
+                          } catch (error) {
+                            console.error('Error opening game:', error);
+                            alert('Unable to open game. Please try again.');
+                          }
+                        } else {
+                          alert('Game coming soon!');
+                        }
+                      }}
+                    >
                       <Play size={20} />
                       Play Game
-        </button>
+                    </button>
                     <div className="game-stats">
                       <span>⭐ 4.8/5</span>
                       <span>👥 1.2k players</span>

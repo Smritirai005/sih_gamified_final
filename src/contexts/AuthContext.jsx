@@ -44,14 +44,13 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setCurrentUser(user);
-      // Temporarily disabled profile creation to fix loading
-      // if (user) {
-      //   try {
-      //     await createUserProfile({ uid: user.uid, email: user.email, displayName: user.displayName });
-      //   } catch (e) {
-      //     console.error('Profile ensure failed', e);
-      //   }
-      // }
+      if (user) {
+        try {
+          await createUserProfile({ uid: user.uid, email: user.email, displayName: user.displayName });
+        } catch (e) {
+          console.error('Profile ensure failed', e);
+        }
+      }
       setLoading(false);
     });
 
