@@ -21,7 +21,8 @@ import {
   Award,
   Crown,
   Home,
-  Clock
+  Clock,
+  MessageCircle
 } from 'lucide-react'
 import { useAuth } from './contexts/AuthContext'
 import AuthModal from './components/AuthModal'
@@ -35,13 +36,16 @@ import Dashboard from './components/Dashboard'
 import PixelatedTree from './components/PixelatedTree'
 import OfflineIndicator from './components/OfflineIndicator'
 import QuizCompletion from './components/QuizCompletion'
+import Chatbot from './components/Chatbot'
 import './App.css'
 import './components/GameComponents.css'
 import './components/Community.css'
+import './components/Chatbot.css'
 import { listenToUserProfile, incrementProgressOnCorrect, finalizeQuiz } from './services/firestore'
 
 function App() {
   const [showAuthModal, setShowAuthModal] = useState(false)
+  const [showChatbot, setShowChatbot] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const [userProgress, setUserProgress] = useState({
     level: 1,
@@ -262,6 +266,14 @@ function App() {
             >
               <Users size={18} />
               Community
+            </button>
+            <button 
+              className="nav-btn chatbot-btn"
+              onClick={() => setShowChatbot(true)}
+              title="Eco Assistant"
+            >
+              <MessageCircle size={18} />
+              AI Assistant
             </button>
             {currentUser ? (
               <div className="user-menu">
@@ -564,6 +576,13 @@ function App() {
       <AuthModal 
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)} 
+      />
+
+      {/* Chatbot Modal */}
+      <Chatbot 
+        isOpen={showChatbot} 
+        onClose={() => setShowChatbot(false)}
+        userProgress={userProgress}
       />
       </div>
   )
