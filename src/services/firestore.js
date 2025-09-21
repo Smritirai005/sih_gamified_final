@@ -36,9 +36,9 @@ const safeFirestoreOperation = async (operation, fallbackValue = null) => {
   }
 };
 
-export async function createUserProfile({ uid, email, displayName }) {
+export async function createUserProfile({ uid, email, displayName, role = 'student' }) {
   if (!isFirestoreAvailable()) {
-    return localStorageService.createUserProfile({ uid, email, displayName });
+    return localStorageService.createUserProfile({ uid, email, displayName, role });
   }
   
   return safeFirestoreOperation(async () => {
@@ -48,6 +48,7 @@ export async function createUserProfile({ uid, email, displayName }) {
       await setDoc(userRef, {
         email,
         displayName: displayName || email.split('@')[0],
+        role,
         createdAt: serverTimestamp(),
         level: 1,
         experience: 0,

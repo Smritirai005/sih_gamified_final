@@ -32,10 +32,11 @@ class LocalStorageService {
   }
 
   // User profile operations
-  async createUserProfile({ uid, email, displayName }) {
+  async createUserProfile({ uid, email, displayName, role = 'student' }) {
     const userData = {
       email,
       displayName: displayName || email.split('@')[0],
+      role,
       createdAt: new Date().toISOString(),
       level: 1,
       experience: 0,
@@ -88,6 +89,7 @@ class LocalStorageService {
       const defaultData = {
         email: 'user@example.com',
         displayName: 'User',
+        role: 'student',
         level: 1,
         experience: 0,
         maxExperience: 1000,

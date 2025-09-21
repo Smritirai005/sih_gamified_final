@@ -22,30 +22,30 @@ import {
   Crown,
   Home,
   Clock,
-  MessageCircle
+  Bot,
+  Sword,
 } from 'lucide-react'
 import { useAuth } from './contexts/AuthContext'
 import AuthModal from './components/AuthModal'
 import ProgressBar from './components/ProgressBar'
 import Badge from './components/Badge'
 import QuizCard from './components/QuizCard'
-import Leaderboard from './components/Leaderboard'
+import EnhancedQuiz from './components/EnhancedQuiz'
 import ScenicBackground from './components/ScenicBackground'
 import Community from './components/Community'
 import Dashboard from './components/Dashboard'
+import TeacherDashboard from './components/TeacherDashboard'
 import PixelatedTree from './components/PixelatedTree'
 import OfflineIndicator from './components/OfflineIndicator'
 import QuizCompletion from './components/QuizCompletion'
-import Chatbot from './components/Chatbot'
+import EcoBuddy from './components/EcoBuddy'
 import './App.css'
 import './components/GameComponents.css'
 import './components/Community.css'
-import './components/Chatbot.css'
 import { listenToUserProfile, incrementProgressOnCorrect, finalizeQuiz } from './services/firestore'
 
 function App() {
   const [showAuthModal, setShowAuthModal] = useState(false)
-  const [showChatbot, setShowChatbot] = useState(false)
   const [activeSection, setActiveSection] = useState('home')
   const [userProgress, setUserProgress] = useState({
     level: 1,
@@ -61,7 +61,7 @@ function App() {
   const [currentQuestion, setCurrentQuestion] = useState(0)
   const [quizScore, setQuizScore] = useState(0)
   const [quizLevel, setQuizLevel] = useState(1)
-  const { currentUser, logout } = useAuth()
+  const { currentUser, userRole, logout } = useAuth()
 
   useEffect(() => {
     if (!currentUser) return;
@@ -78,6 +78,14 @@ function App() {
     })
     return () => unsub && unsub()
   }, [currentUser])
+
+  // Redirect teachers to Eco Quest
+  useEffect(() => {
+    if (currentUser && userRole === 'teacher') {
+      // Open Eco Quest in a new tab for teachers
+      window.open('https://school-arena-quest.vercel.app', '_blank');
+    }
+  }, [currentUser, userRole])
 
   // Sample quiz questions
   const quizQuestions = [
@@ -225,56 +233,58 @@ function App() {
             <h1>EcoGame</h1>
           </div>
           <nav className="nav">
+            {userRole !== 'teacher' && (
+              <button 
+                className={`nav-btn ${activeSection === 'home' ? 'active' : ''}`}
+                onClick={() => setActiveSection('home')}
+              >
+                <Home size={18} />
+                Home
+              </button>
+            )}
+            {userRole !== 'teacher' && (
+              <button 
+                className={`nav-btn ${activeSection === 'games' ? 'active' : ''}`}
+                onClick={() => setActiveSection('games')}
+              >
+                <Gamepad2 size={18} />
+                Games
+              </button>
+            )}
+            {userRole !== 'teacher' && (
+              <button 
+                className={`nav-btn ${activeSection === 'quiz' ? 'active' : ''}`}
+                onClick={() => setActiveSection('quiz')}
+              >
+                <Brain size={18} />
+                Quiz
+              </button>
+            )}
+            {userRole !== 'teacher' && (
+              <button 
+                className={`nav-btn ${activeSection === 'dashboard' ? 'active' : ''}`}
+                onClick={() => setActiveSection('dashboard')}
+              >
+                <User size={18} />
+                Dashboard
+              </button>
+            )}
             <button 
-              className={`nav-btn ${activeSection === 'home' ? 'active' : ''}`}
-              onClick={() => setActiveSection('home')}
+              className={`nav-btn ${userRole === 'teacher' ? 'active' : ''}`}
+              onClick={() => window.open('https://school-arena-quest.vercel.app', '_blank')}
             >
-              <Home size={18} />
-              Home
+              <Sword size={18} />
+              Eco Quest
             </button>
-            <button 
-              className={`nav-btn ${activeSection === 'games' ? 'active' : ''}`}
-              onClick={() => setActiveSection('games')}
-            >
-              <Gamepad2 size={18} />
-              Games
-            </button>
-            <button 
-              className={`nav-btn ${activeSection === 'quiz' ? 'active' : ''}`}
-              onClick={() => setActiveSection('quiz')}
-            >
-              <Brain size={18} />
-              Quiz
-            </button>
-            <button 
-              className={`nav-btn ${activeSection === 'leaderboard' ? 'active' : ''}`}
-              onClick={() => setActiveSection('leaderboard')}
-            >
-              <Trophy size={18} />
-              Leaderboard
-            </button>
-            <button 
-              className={`nav-btn ${activeSection === 'dashboard' ? 'active' : ''}`}
-              onClick={() => setActiveSection('dashboard')}
-            >
-              <User size={18} />
-              Dashboard
-            </button>
-            <button 
-              className={`nav-btn ${activeSection === 'community' ? 'active' : ''}`}
-              onClick={() => setActiveSection('community')}
-            >
-              <Users size={18} />
-              Community
-            </button>
-            <button 
-              className="nav-btn chatbot-btn"
-              onClick={() => setShowChatbot(true)}
-              title="Eco Assistant"
-            >
-              <MessageCircle size={18} />
-              AI Assistant
-            </button>
+            {userRole !== 'teacher' && (
+              <button 
+                className={`nav-btn ${activeSection === 'community' ? 'active' : ''}`}
+                onClick={() => setActiveSection('community')}
+              >
+                <Users size={18} />
+                Community
+              </button>
+            )}
             {currentUser ? (
               <div className="user-menu">
                 <div className="user-info">
@@ -303,35 +313,66 @@ function App() {
       <main className="main-content">
         {activeSection === 'home' && (
           <>
-            {/* Hero Section */}
-            <section className="hero">
-              <div className="hero-content">
-                <div className="hero-text">
-                  <h1>EcoGame - Environmental Survival</h1>
-                  <p className="hero-description">
-                    Master environmental challenges in this pixelated world. 
-                    Build sustainable ecosystems, complete quests, and compete with other players. 
-                    Every action impacts the virtual environment. Level up your eco-skills and become the ultimate environmental champion.
-                  </p>
-                  <div className="hero-buttons">
-                    <button className="primary-btn" onClick={() => setActiveSection('games')}>
-                      <Play size={16} />
-                      Start Game
-                    </button>
-                    <button className="secondary-btn" onClick={() => setActiveSection('quiz')}>
-                      <Brain size={16} />
-                      Take Quiz
-                    </button>
+            {userRole === 'teacher' ? (
+              /* Teacher Home Section */
+              <section className="hero">
+                <div className="hero-content">
+                  <div className="hero-text">
+                    <h1>Welcome, Teacher! 👨‍🏫</h1>
+                    <p className="hero-description">
+                      Access your educational management tools and guide your students through environmental learning adventures. 
+                      Use Eco Quest to create engaging lessons and track student progress.
+                    </p>
+                    <div className="hero-buttons">
+                      <button 
+                        className="primary-btn" 
+                        onClick={() => window.open('https://school-arena-quest.vercel.app', '_blank')}
+                      >
+                        <Sword size={16} />
+                        Launch Eco Quest
+                      </button>
+                      <button className="secondary-btn" onClick={() => setActiveSection('dashboard')}>
+                        <User size={16} />
+                        Teacher Dashboard
+                      </button>
+                    </div>
+                  </div>
+                  <div className="hero-visual">
+                    {/* Pixel backdrop is now handled by ScenicBackground component */}
                   </div>
                 </div>
-                <div className="hero-visual">
-                  {/* Pixel backdrop is now handled by ScenicBackground component */}
+              </section>
+            ) : (
+              /* Student Home Section */
+              <section className="hero">
+                <div className="hero-content">
+                  <div className="hero-text">
+                    <h1>EcoGame - Environmental Survival</h1>
+                    <p className="hero-description">
+                      Master environmental challenges in this pixelated world. 
+                      Build sustainable ecosystems, complete quests, and compete with other players. 
+                      Every action impacts the virtual environment. Level up your eco-skills and become the ultimate environmental champion.
+                    </p>
+                    <div className="hero-buttons">
+                      <button className="primary-btn" onClick={() => setActiveSection('games')}>
+                        <Play size={16} />
+                        Start Game
+                      </button>
+                      <button className="secondary-btn" onClick={() => setActiveSection('quiz')}>
+                        <Brain size={16} />
+                        Take Quiz
+                      </button>
+                    </div>
+                  </div>
+                  <div className="hero-visual">
+                    {/* Pixel backdrop is now handled by ScenicBackground component */}
+                  </div>
                 </div>
-              </div>
-            </section>
+              </section>
+            )}
 
-            {/* User Progress Section */}
-            {currentUser && (
+            {/* User Progress Section - Only for Students */}
+            {currentUser && userRole !== 'teacher' && (
               <section className="progress-section">
                 <div className="section-header">
                   <h2>Your Eco Journey</h2>
@@ -372,7 +413,8 @@ function App() {
               </section>
             )}
 
-            {/* Features Section */}
+            {/* Features Section - Only for Students */}
+            {userRole !== 'teacher' && (
             <section className="features-section">
               <div className="section-header">
                 <h2>Environmental Games & Activities</h2>
@@ -414,9 +456,10 @@ function App() {
                 ))}
               </div>
             </section>
+            )}
 
-            {/* Badges Section */}
-            {currentUser && (
+            {/* Badges Section - Only for Students */}
+            {currentUser && userRole !== 'teacher' && (
               <section className="badges-section">
                 <div className="section-header">
                   <h2>Your Achievements</h2>
@@ -440,66 +483,11 @@ function App() {
         )}
 
         {activeSection === 'quiz' && (
-          <section className="quiz-section">
-            <div className="section-header">
-              <h2>Environmental Knowledge Quiz</h2>
-              <p>Test your eco-knowledge and earn points!</p>
-            </div>
-            {showQuizCompletion ? (
-              <QuizCompletion
-                score={quizScore / 10}
-                totalQuestions={quizQuestions.length}
-                level={quizLevel}
-                onRestart={handleQuizRestart}
-                onNextLevel={handleQuizNextLevel}
-                userProgress={userProgress}
-              />
-            ) : showQuiz ? (
-              <QuizCard
-                question={quizQuestions[currentQuestion].question}
-                options={quizQuestions[currentQuestion].options}
-                correctAnswer={quizQuestions[currentQuestion].correctAnswer}
-                onAnswer={handleQuizAnswer}
-                questionNumber={currentQuestion + 1}
-                totalQuestions={quizQuestions.length}
-                level={quizLevel}
-              />
-            ) : (
-              <div className="quiz-start game-card">
-                <Brain size={64} className="eco-icon" />
-                <h3>Ready to Test Your Eco Knowledge?</h3>
-                <p>Answer {quizQuestions.length} questions about the environment and earn eco-points!</p>
-                <div className="quiz-info">
-                  <div className="info-item">
-                    <Target size={20} />
-                    <span>{quizQuestions.length} Questions</span>
-                  </div>
-                  <div className="info-item">
-                    <Zap size={20} />
-                    <span>10 Points per Correct Answer</span>
-                  </div>
-                  <div className="info-item">
-                    <Clock size={20} />
-                    <span>30 Seconds per Question</span>
-                  </div>
-                </div>
-                <button className="primary-btn large" onClick={startQuiz}>
-                  <Play size={20} />
-                  Start Quiz
-                </button>
-              </div>
-            )}
-          </section>
-        )}
-
-        {activeSection === 'leaderboard' && (
-          <section className="leaderboard-section">
-            <Leaderboard currentUser={currentUser} />
-          </section>
+          <EnhancedQuiz />
         )}
 
         {activeSection === 'dashboard' && (
-          <Dashboard />
+          userRole === 'teacher' ? <TeacherDashboard /> : <Dashboard />
         )}
 
         {activeSection === 'community' && (
@@ -577,14 +565,10 @@ function App() {
         isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)} 
       />
-
-      {/* Chatbot Modal */}
-      <Chatbot 
-        isOpen={showChatbot} 
-        onClose={() => setShowChatbot(false)}
-        userProgress={userProgress}
-      />
-      </div>
+      
+      {/* EcoBuddy AI Assistant */}
+      <EcoBuddy />
+    </div>
   )
 }
 

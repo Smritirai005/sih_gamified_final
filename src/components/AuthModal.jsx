@@ -11,6 +11,7 @@ export default function AuthModal({ isOpen, onClose }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [userRole, setUserRole] = useState('');
 
   const { login, signup, googleSignIn } = useAuth();
 
@@ -28,7 +29,12 @@ export default function AuthModal({ isOpen, onClose }) {
           setLoading(false);
           return;
         }
-        await signup(email, password);
+        if (!userRole) {
+          setError('Please select your role (Student or Teacher)');
+          setLoading(false);
+          return;
+        }
+        await signup(email, password, userRole);
       }
       onClose();
     } catch (error) {
@@ -38,8 +44,12 @@ export default function AuthModal({ isOpen, onClose }) {
   };
 
   const handleGoogleSignIn = async () => {
+    if (!isLogin && !userRole) {
+      setError('Please select your role (Student or Teacher)');
+      return;
+    }
     try {
-      await googleSignIn();
+      await googleSignIn(userRole || 'student');
       onClose();
     } catch (error) {
       setError(error.message);
@@ -58,6 +68,11 @@ export default function AuthModal({ isOpen, onClose }) {
         <div className="auth-header">
           <h2>{isLogin ? 'Welcome Back' : 'Join EcoGame'}</h2>
           <p>{isLogin ? 'Sign in to continue your eco-journey' : 'Create your account and start saving the planet'}</p>
+          {!isLogin && (
+            <div className="role-selection-info">
+              <p>Are you a student or teacher?</p>
+            </div>
+          )}
         </div>
 
         {error && <div className="error-message">{error}</div>}
@@ -84,6 +99,22 @@ export default function AuthModal({ isOpen, onClose }) {
               required
             />
           </div>
+
+          {!isLogin && (
+            <div className="input-group">
+              <User className="input-icon" size={20} />
+              <select
+                value={userRole}
+                onChange={(e) => setUserRole(e.target.value)}
+                className="role-select"
+                required
+              >
+                <option value="">Select your role...</option>
+                <option value="student">👨‍🎓 Student</option>
+                <option value="teacher">👨‍🏫 Teacher</option>
+              </select>
+            </div>
+          )}
 
           <div className="input-group">
             <Lock className="input-icon" size={20} />
@@ -141,7 +172,11 @@ export default function AuthModal({ isOpen, onClose }) {
             <button
               type="button"
               className="switch-btn"
-              onClick={() => setIsLogin(!isLogin)}
+              onClick={() => {
+                setIsLogin(!isLogin);
+                setUserRole('');
+                setError('');
+              }}
             >
               {isLogin ? 'Sign Up' : 'Sign In'}
             </button>

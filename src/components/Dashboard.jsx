@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Crown, TreePine, Droplets, Wind, Brain, User, Play, ExternalLink, Target, BookOpen, Award, Sun, Recycle } from 'lucide-react';
+import { Crown, TreePine, Droplets, Wind, Brain, User, Play, ExternalLink, Target, BookOpen, Award, Sun, Recycle, Trophy, Medal, Star, TrendingUp } from 'lucide-react';
 import { useAuth } from '../contexts/AuthContext';
 import { listenToUserProfile } from '../services/firestore';
 import ProgressBar from './ProgressBar';
@@ -7,8 +7,9 @@ import Badge from './Badge';
 import './Dashboard.css';
 
 export default function Dashboard() {
-  const { currentUser } = useAuth();
+  const { currentUser, userRole } = useAuth();
   const [profile, setProfile] = useState(null);
+  const [timeframe, setTimeframe] = useState('all-time');
 
   useEffect(() => {
     if (!currentUser) return;
@@ -54,43 +55,37 @@ export default function Dashboard() {
     { topic: 'Biodiversity', score: 88, date: '2024-01-08', questions: 9, correct: 8 },
   ];
 
-  const environmentalRoadmap = [
-    { 
-      id: 1, 
-      title: 'Climate Science Basics', 
-      description: 'Understanding greenhouse gases, global warming, and climate patterns',
-      status: 'completed',
-      icon: <Brain size={20} />
-    },
-    { 
-      id: 2, 
-      title: 'Renewable Energy Systems', 
-      description: 'Solar, wind, hydro, and geothermal energy technologies',
-      status: 'completed',
-      icon: <Sun size={20} />
-    },
-    { 
-      id: 3, 
-      title: 'Ocean Conservation', 
-      description: 'Marine ecosystems, plastic pollution, and sustainable fishing',
-      status: 'in-progress',
-      icon: <Droplets size={20} />
-    },
-    { 
-      id: 4, 
-      title: 'Biodiversity Protection', 
-      description: 'Species conservation, habitat restoration, and ecosystem balance',
-      status: 'pending',
-      icon: <TreePine size={20} />
-    },
-    { 
-      id: 5, 
-      title: 'Sustainable Living', 
-      description: 'Zero waste, circular economy, and green lifestyle choices',
-      status: 'pending',
-      icon: <Recycle size={20} />
-    },
+  const mockLeaderboard = [
+    { id: 1, name: 'EcoMaster2024', score: 2450, level: 15, avatar: '🌱', badges: 8 },
+    { id: 2, name: 'GreenWarrior', score: 2380, level: 14, avatar: '🌿', badges: 7 },
+    { id: 3, name: 'TreePlanter', score: 2200, level: 13, avatar: '🌳', badges: 6 },
+    { id: 4, name: 'OceanSaver', score: 2150, level: 12, avatar: '🌊', badges: 5 },
+    { id: 5, name: 'RecycleKing', score: 2000, level: 11, avatar: '♻️', badges: 4 },
+    { id: 6, name: 'NatureLover', score: 1850, level: 10, avatar: '🦋', badges: 3 },
+    { id: 7, name: 'EcoExplorer', score: 1700, level: 9, avatar: '🐝', badges: 3 },
+    { id: 8, name: 'GreenThumb', score: 1550, level: 8, avatar: '🌻', badges: 2 },
+    { id: 9, name: 'EarthGuardian', score: 1400, level: 7, avatar: '🌍', badges: 2 },
+    { id: 10, name: 'EcoNewbie', score: 1200, level: 6, avatar: '🌱', badges: 1 }
   ];
+
+  const getRankIcon = (rank) => {
+    switch (rank) {
+      case 1: return <Crown size={24} className="text-yellow-500" />;
+      case 2: return <Medal size={24} className="text-gray-400" />;
+      case 3: return <Award size={24} className="text-amber-600" />;
+      default: return <span className="rank-number">{rank}</span>;
+    }
+  };
+
+  const getRankClass = (rank) => {
+    switch (rank) {
+      case 1: return 'leaderboard-item first-place';
+      case 2: return 'leaderboard-item second-place';
+      case 3: return 'leaderboard-item third-place';
+      default: return 'leaderboard-item';
+    }
+  };
+
 
 
   return (
@@ -106,6 +101,7 @@ export default function Dashboard() {
             <div>
               <h3>Level {profile.level || 1}</h3>
               <p>{profile.displayName || currentUser.email}</p>
+              <p className="user-role">{userRole === 'teacher' ? '👨‍🏫 Teacher' : '👨‍🎓 Student'}</p>
             </div>
           </div>
           <ProgressBar
@@ -163,6 +159,44 @@ export default function Dashboard() {
         </div>
       )}
 
+      {/* Eco Task Pathways Section */}
+      <div className="eco-task-section">
+        <div className="section-header">
+          <h2>Eco Task Pathways</h2>
+          <p>Complete environmental challenges and earn rewards</p>
+        </div>
+        <div className="eco-task-card game-card">
+          <div className="eco-task-header">
+            <Target size={24} className="eco-icon" />
+            <div className="eco-task-info">
+              <h3>Environmental Task Pathways</h3>
+              <p>Engage in structured environmental learning activities and track your progress through various eco-friendly challenges.</p>
+            </div>
+            <button 
+              className="eco-task-btn primary-btn"
+              onClick={() => window.open('https://eco-task-pathways.vercel.app', '_blank')}
+            >
+              <ExternalLink size={16} />
+              Start Tasks
+            </button>
+          </div>
+          <div className="eco-task-features">
+            <div className="feature-item">
+              <BookOpen size={16} />
+              <span>Structured Learning Paths</span>
+            </div>
+            <div className="feature-item">
+              <Award size={16} />
+              <span>Progress Tracking</span>
+            </div>
+            <div className="feature-item">
+              <Sun size={16} />
+              <span>Environmental Challenges</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Quiz Results Section */}
       <div className="quiz-results-section">
         <div className="section-header">
@@ -198,30 +232,83 @@ export default function Dashboard() {
         </div>
       </div>
 
-      {/* Environmental Learning Roadmap */}
-      <div className="roadmap-section">
+      {/* Leaderboard Section */}
+      <div className="leaderboard-section">
         <div className="section-header">
-          <h2>Environmental Learning Roadmap</h2>
-          <p>Your journey to becoming an eco-expert</p>
+          <h2>Eco Champions Leaderboard</h2>
+          <p>See how you rank among eco-warriors worldwide</p>
         </div>
-        <div className="roadmap-container">
-          {environmentalRoadmap.map((item, index) => (
-            <div key={item.id} className={`roadmap-item ${item.status}`}>
-              <div className="roadmap-icon">
-                {item.status === 'completed' ? <Award size={20} /> : item.icon}
+        
+        <div className="leaderboard-filters">
+          <button 
+            className={`filter-btn ${timeframe === 'all-time' ? 'active' : ''}`}
+            onClick={() => setTimeframe('all-time')}
+          >
+            All Time
+          </button>
+          <button 
+            className={`filter-btn ${timeframe === 'monthly' ? 'active' : ''}`}
+            onClick={() => setTimeframe('monthly')}
+          >
+            This Month
+          </button>
+          <button 
+            className={`filter-btn ${timeframe === 'weekly' ? 'active' : ''}`}
+            onClick={() => setTimeframe('weekly')}
+          >
+            This Week
+          </button>
+        </div>
+
+        {currentUser && (
+          <div className="user-rank-card game-card">
+            <div className="user-rank-info">
+              <div className="user-rank-icon">
+                <TrendingUp size={24} />
               </div>
-              <div className="roadmap-content">
-                <h4>{item.title}</h4>
-                <p>{item.description}</p>
-                <div className="roadmap-status">
-                  <span className={`status-badge ${item.status}`}>
-                    {item.status === 'completed' ? '✓ Completed' : 
-                     item.status === 'in-progress' ? '🔄 In Progress' : '⏳ Pending'}
+              <div className="user-rank-details">
+                <h3>Your Rank</h3>
+                <p>You're #{11} on the leaderboard!</p>
+              </div>
+            </div>
+            <div className="user-rank-badge">
+              <span className="rank-badge">#11</span>
+            </div>
+          </div>
+        )}
+
+        <div className="leaderboard-list">
+          {mockLeaderboard.slice(0, 5).map((user, index) => (
+            <div key={user.id} className={`${getRankClass(index + 1)} game-card`}>
+              <div className="leaderboard-rank">
+                {getRankIcon(index + 1)}
+              </div>
+              
+              <div className="leaderboard-avatar">
+                <span className="avatar-emoji">{user.avatar}</span>
+              </div>
+              
+              <div className="leaderboard-info">
+                <h4 className="player-name">{user.name}</h4>
+                <div className="player-stats">
+                  <span className="player-level">Level {user.level}</span>
+                  <span className="player-badges">
+                    <Star size={14} />
+                    {user.badges} badges
                   </span>
                 </div>
               </div>
+              
+              <div className="leaderboard-score">
+                <span className="score-value">{user.score.toLocaleString()}</span>
+                <span className="score-label">points</span>
+              </div>
             </div>
           ))}
+        </div>
+
+        <div className="leaderboard-footer">
+          <p>🏆 Compete with eco-warriors worldwide and climb the ranks!</p>
         </div>
       </div>
 
