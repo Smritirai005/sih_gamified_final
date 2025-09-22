@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Trophy, Star, Target, Zap, Crown, ArrowRight, RotateCcw } from 'lucide-react';
+import AIFeedback from './AIFeedback';
+import { aiService } from '../services/aiService';
 
 export default function QuizCompletion({ 
   score, 
@@ -7,11 +9,15 @@ export default function QuizCompletion({
   level, 
   onRestart, 
   onNextLevel,
-  userProgress 
+  userProgress,
+  quizResults,
+  quizTopic
 }) {
   const [showAnimation, setShowAnimation] = useState(false);
   const [earnedPoints, setEarnedPoints] = useState(0);
   const [newLevel, setNewLevel] = useState(level);
+  const [aiAnalysis, setAiAnalysis] = useState(null);
+  const [isAnalyzing, setIsAnalyzing] = useState(false);
 
   useEffect(() => {
     setShowAnimation(true);
@@ -20,7 +26,21 @@ export default function QuizCompletion({
     // Calculate if user leveled up
     const newLevelValue = Math.min(3, Math.floor((userProgress.quizzesCompleted + 1) / 3) + 1);
     setNewLevel(newLevelValue);
-  }, [score, userProgress.quizzesCompleted]);
+    
+    // Get AI analysis if quiz results are available
+    if (quizResults && quizResults.length > 0) {
+      setIsAnalyzing(true);
+      aiService.analyzeResults(quizResults, quizTopic)
+        .then(analysis => {
+          setAiAnalysis(analysis);
+          setIsAnalyzing(false);
+        })
+        .catch(error => {
+          console.error('Error getting AI analysis:', error);
+          setIsAnalyzing(false);
+        });
+    }
+  }, [score, userProgress.quizzesCompleted, quizResults, quizTopic]);
 
   const percentage = Math.round((score / totalQuestions) * 100);
   const isPerfect = percentage === 100;
@@ -131,6 +151,9 @@ export default function QuizCompletion({
           <li>Recycle paper, plastic, and glass</li>
         </ul>
       </div>
+      
+      {/* AI Feedback and Resource Recommendations */}
+      <AIFeedback analysisData={aiAnalysis} isLoading={isAnalyzing} />
     </div>
   );
 }

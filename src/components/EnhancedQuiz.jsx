@@ -16,6 +16,7 @@ export default function EnhancedQuiz() {
   const [quizScore, setQuizScore] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [quizResults, setQuizResults] = useState([]);
   
   const { currentUser } = useAuth();
   const availableTopics = aiService.getAvailableTopics();
@@ -44,6 +45,16 @@ export default function EnhancedQuiz() {
   };
 
   const handleQuizAnswer = (isCorrect, answer) => {
+    // Track the result for this question
+    const currentQ = questions[currentQuestion];
+    setQuizResults(prev => [...prev, {
+      question: currentQ.question,
+      userAnswer: answer,
+      correctAnswer: currentQ.correctAnswer,
+      isCorrect: isCorrect,
+      explanation: currentQ.explanation
+    }]);
+    
     if (isCorrect) {
       setQuizScore(prev => prev + 10);
       if (currentUser) {
@@ -72,6 +83,7 @@ export default function EnhancedQuiz() {
     setQuestions([]);
     setCurrentQuestion(0);
     setQuizScore(0);
+    setQuizResults([]);
     setError('');
   };
 
@@ -81,6 +93,7 @@ export default function EnhancedQuiz() {
     setQuestions([]);
     setCurrentQuestion(0);
     setQuizScore(0);
+    setQuizResults([]);
     setError('');
   };
 
@@ -271,8 +284,9 @@ export default function EnhancedQuiz() {
         level={difficulty === 'easy' ? 1 : difficulty === 'medium' ? 2 : 3}
         onRestart={handleNewQuiz}
         onNextLevel={() => setQuizState('topic-selection')}
-        userProgress={{ ecoPoints: quizScore }}
-        topic={selectedTopic}
+        userProgress={{ ecoPoints: quizScore, quizzesCompleted: 1 }}
+        quizResults={quizResults}
+        quizTopic={selectedTopic}
       />
     );
   }
