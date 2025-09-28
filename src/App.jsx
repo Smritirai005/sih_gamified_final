@@ -35,7 +35,6 @@ import ScenicBackground from './components/ScenicBackground'
 import Community from './components/Community'
 import Dashboard from './components/Dashboard'
 import TeacherDashboard from './components/TeacherDashboard'
-import PixelatedTree from './components/PixelatedTree'
 import OfflineIndicator from './components/OfflineIndicator'
 import QuizCompletion from './components/QuizCompletion'
 import EcoBuddy from './components/EcoBuddy'
@@ -228,9 +227,8 @@ function App() {
       {/* Header */}
       <header className="header">
         <div className="header-content">
-          <div className="logo-section">
-            <PixelatedTree size={32} />
-            <h1>EcoGame</h1>
+          <div className="logo-section"style={{ marginLeft: '35px' }}>
+            <h1>URJA</h1>
           </div>
           <nav className="nav">
             {userRole !== 'teacher' && (
@@ -274,7 +272,7 @@ function App() {
               onClick={() => window.open('https://school-arena-quest.vercel.app', '_blank')}
             >
               <Sword size={18} />
-              Eco Quest
+              Urja Arena
             </button>
             {userRole !== 'teacher' && (
               <button 
@@ -329,7 +327,7 @@ function App() {
                         onClick={() => window.open('https://school-arena-quest.vercel.app', '_blank')}
                       >
                         <Sword size={16} />
-                        Launch Eco Quest
+                        Launch Urja Arena
                       </button>
                       <button className="secondary-btn" onClick={() => setActiveSection('dashboard')}>
                         <User size={16} />
@@ -347,7 +345,8 @@ function App() {
               <section className="hero">
                 <div className="hero-content">
                   <div className="hero-text">
-                    <h1>EcoGame - Environmental Survival</h1>
+                    <h1>URJA-</h1>
+                    <h2>Unified Responsible Journeys for Awareness</h2>
                     <p className="hero-description">
                       Master environmental challenges in this pixelated world. 
                       Build sustainable ecosystems, complete quests, and compete with other players. 

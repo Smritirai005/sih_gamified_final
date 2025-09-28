@@ -162,7 +162,7 @@ export default function Dashboard() {
       {/* Eco Task Pathways Section */}
       <div className="eco-task-section">
         <div className="section-header">
-          <h2>Eco Task Pathways</h2>
+          <h2>Green Action Pathways</h2>
           <p>Complete environmental challenges and earn rewards</p>
         </div>
         <div className="eco-task-card game-card">
